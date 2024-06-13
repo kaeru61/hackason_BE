@@ -29,7 +29,11 @@ func postController(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPut:
 		postUpdate(w, r)
 		return
+	default:
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
+
 }
 
 func postGet(w http.ResponseWriter, r *http.Request) {
