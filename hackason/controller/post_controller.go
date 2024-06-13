@@ -38,7 +38,7 @@ func postController(w http.ResponseWriter, r *http.Request) {
 
 func postGet(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
-	postId := query.Get("postId")
+	postId := query.Get("id")
 
 	postInfo := application.PostGet(postId)
 	if postInfo.Error.Code == 1 {
