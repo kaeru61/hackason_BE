@@ -50,6 +50,7 @@ func userGetUserByUserId(userId string, userInfo *makeupmodel.UserInfo) error {
 		}
 		userInfo.User = u
 	}
+	return nil
 }
 
 func userGetUserByUserName(userName string, userInfo *makeupmodel.UserInfo) error {
@@ -76,6 +77,7 @@ func userGetUserByUserName(userName string, userInfo *makeupmodel.UserInfo) erro
 		}
 		userInfo.User = u
 	}
+	return nil
 }
 
 func UserCreate(u mainmodel.User) mainmodel.Error {
