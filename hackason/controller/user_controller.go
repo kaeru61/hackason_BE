@@ -34,7 +34,7 @@ func userController(w http.ResponseWriter, r *http.Request) {
 
 func userGet(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
-	if query.Get("userId") != "" {
+	if query.Get("id") != "" {
 		userId := query.Get("id")
 		userInfo := application.UserGetByUserId(userId)
 		if userInfo.Error.Code == 1 {
