@@ -6,8 +6,7 @@ import (
 )
 
 func Handler() {
-	version := 1
 
-	http.HandleFunc(fmt.Sprintf("/v%s/post", version), postController)
-	http.HandleFunc(fmt.Sprintf("/v%s/user", version), userController)
+	http.HandleFunc(fmt.Sprintf("/post"), postController)
+	http.HandleFunc(fmt.Sprintf("/user"), userController)
 }
