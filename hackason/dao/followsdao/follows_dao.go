@@ -11,7 +11,7 @@ import (
 func followsGetUser(userId string, followsInfo *makeupmodel.FollowsInfo) error {
 	rows, err := maindao.Db.Query(`SELECT * FROM user WHERE  id = ?`, userId)
 	if err != nil {
-		log.Printf("fail: db.Query @followsGetUser, %v\n", err)
+		log.Printf("fail: hackason.Query @followsGetUser, %v\n", err)
 	}
 	for rows.Next() {
 		var u mainmodel.User
@@ -19,7 +19,7 @@ func followsGetUser(userId string, followsInfo *makeupmodel.FollowsInfo) error {
 			&u.Id, &u.Name, &u.Age, &u.Bio,
 		); err != nil {
 			log.Printf("fail: rows.Scan @followsGetUser, %v\n", err)
-			followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @followGetUser, %v\n", err))
+			followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @followGetUser, %v\n", err))
 
 			if err_ := rows.Close(); err_ != nil {
 				log.Printf("fail: rows.Close @followsGetUser, %v\n", err_)
@@ -37,8 +37,8 @@ func followsGetUser(userId string, followsInfo *makeupmodel.FollowsInfo) error {
 func followsGetFollowing(userId string, followsInfo *makeupmodel.FollowsInfo) error {
 	rows, err := maindao.Db.Query(`SELECT * FROM follows WHERE followingUId = ?`, userId)
 	if err != nil {
-		log.Printf("fail: db.Query @followsGetFollowing, %v\n", err)
-		followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @messageGetReply, %v\n", err))
+		log.Printf("fail: hackason.Query @followsGetFollowing, %v\n", err)
+		followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @messageGetReply, %v\n", err))
 		return err
 	}
 	for rows.Next() {

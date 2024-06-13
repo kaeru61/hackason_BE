@@ -28,7 +28,7 @@ func OpenSQL() {
 	}
 	// ①-3
 	if err := Db_.Ping(); err != nil {
-		log.Fatalf("fail: db.Ping, %v\n", err)
+		log.Fatalf("fail: hackason.Ping, %v\n", err)
 	}
 	Db = Db_
 }

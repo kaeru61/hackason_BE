@@ -24,7 +24,7 @@ func PostGet(postId string) (makeupmodel.PostInfo, error) {
 func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
 	rows, err := maindao.Db.Query(`SELECT * FROM post WHERE postId = ?`, postId)
 	if err != nil {
-		log.Printf("fail: db.Query @postGetPost, %v\n", err)
+		log.Printf("fail: hackason.Query @postGetPost, %v\n", err)
 	}
 	for rows.Next() {
 		var p mainmodel.Post
@@ -32,7 +32,7 @@ func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
 			&p.Id, &p.UserId, &p.Body, &p.CreateAt, &p.Deleted, &p.ParentId,
 		); err != nil {
 			log.Printf("fail: rows.Scan @postGetPost, %v\n", err)
-			postInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @postGetPost, %v\n", err))
+			postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetPost, %v\n", err))
 
 			if err_ := rows.Close(); err_ != nil {
 				log.Printf("fail: rows.Close @postGetPost, %v\n", err_)
@@ -50,8 +50,8 @@ func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
 func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
 	rows, err := maindao.Db.Query(`SELECT * FROM post WHERE parentId = ?`, postId)
 	if err != nil {
-		log.Printf("fail: db.Query @messageGetMessage, %v\n", err)
-		postInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @messageGetReply, %v\n", err))
+		log.Printf("fail: hackason.Query @messageGetMessage, %v\n", err)
+		postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @messageGetReply, %v\n", err))
 		return err
 	}
 	for rows.Next() {
@@ -78,7 +78,7 @@ func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
 func PostCreate(p mainmodel.Post) mainmodel.Error {
 	tx, err := maindao.Db.Begin()
 	if err != nil {
-		return mainmodel.MakeError(1, fmt.Sprintf("fail: db.Begin, %v @post_create_dao\n", err))
+		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @post_create_dao\n", err))
 	}
 	rows, err := tx.Prepare("insert into post (id, userId, body, createAt, parentId, deleted) values(?, ?, ?, ?, ?, ?)")
 	if err != nil {
@@ -100,7 +100,7 @@ func PostDelete(id string) mainmodel.Error {
 	tx, err := maindao.Db.Begin()
 
 	if err != nil {
-		return mainmodel.MakeError(1, fmt.Sprintf("fail: db.Begin, %v @post_delete_dao\n", err))
+		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @post_delete_dao\n", err))
 	}
 
 	rows, err := tx.Prepare("update message set deleted=? where id=?")
@@ -143,7 +143,7 @@ func PostUpdate(p mainmodel.Post) mainmodel.Error {
 	tx, err := maindao.Db.Begin()
 
 	if err != nil {
-		return mainmodel.MakeError(1, fmt.Sprintf("fail: db.Begin, %v @post_update_dao\n", err))
+		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @post_update_dao\n", err))
 	}
 
 	rows, err := tx.Prepare("update post set body=? where id=?")

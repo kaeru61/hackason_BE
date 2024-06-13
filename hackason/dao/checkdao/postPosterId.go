@@ -11,8 +11,8 @@ func PostPosterId(postId string) (string, mainmodel.Error) {
 	rows, err := maindao.Db.Query("select userId from post where postId=?", postId)
 
 	if err != nil {
-		log.Printf("fail: db.Query, %v\n", err)
-		return "", mainmodel.MakeError(1, fmt.Sprintf("fail: db.Query, %v\n", err))
+		log.Printf("fail: hackason.Query, %v\n", err)
+		return "", mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Query, %v\n", err))
 	}
 
 	var posterId string

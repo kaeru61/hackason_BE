@@ -29,8 +29,8 @@ func UserGetUserByUserName(userName string) (makeupmodel.UserInfo, error) {
 func userGetUserByUserId(userId string, userInfo *makeupmodel.UserInfo) error {
 	rows, err := maindao.Db.Query("select id, name, age, bio from user where id = ?", userId)
 	if err != nil {
-		log.Printf("fail: db.Query @userGetUserByUserId, %v\n", err)
-		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @userGetUserByUserId, %v\n", err))
+		log.Printf("fail: hackason.Query @userGetUserByUserId, %v\n", err)
+		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @userGetUserByUserId, %v\n", err))
 		return err
 	}
 	for rows.Next() {
@@ -39,7 +39,7 @@ func userGetUserByUserId(userId string, userInfo *makeupmodel.UserInfo) error {
 			&u.Id, &u.Name, &u.Bio, &u.Age,
 		); err != nil {
 			log.Printf("fail: rows.Scan @userGetUserByUserId, %v\n", err)
-			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @userGetUserByUserId, %v\n", err))
+			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @userGetUserByUserId, %v\n", err))
 
 			if err_ := rows.Close(); err_ != nil {
 				log.Printf("fail: rows.Close @userGetUserByUserId, %v\n", err_)
@@ -56,8 +56,8 @@ func userGetUserByUserId(userId string, userInfo *makeupmodel.UserInfo) error {
 func userGetUserByUserName(userName string, userInfo *makeupmodel.UserInfo) error {
 	rows, err := maindao.Db.Query("select id, name, age, bio from user where name = ?", userName)
 	if err != nil {
-		log.Printf("fail: db.Query @userGetUserByUserName, %v\n", err)
-		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @userGetUserByUserName, %v\n", err))
+		log.Printf("fail: hackason.Query @userGetUserByUserName, %v\n", err)
+		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @userGetUserByUserName, %v\n", err))
 		return err
 	}
 	for rows.Next() {
@@ -66,7 +66,7 @@ func userGetUserByUserName(userName string, userInfo *makeupmodel.UserInfo) erro
 			&u.Id, &u.Name, &u.Bio, &u.Age,
 		); err != nil {
 			log.Printf("fail: rows.Scan @userGetUserByUserName, %v\n", err)
-			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: db.Query @userGetUserByUserName, %v\n", err))
+			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @userGetUserByUserName, %v\n", err))
 
 			if err_ := rows.Close(); err_ != nil {
 				log.Printf("fail: rows.Close @userGetUserByUserName, %v\n", err_)
@@ -83,7 +83,7 @@ func userGetUserByUserName(userName string, userInfo *makeupmodel.UserInfo) erro
 func UserCreate(u mainmodel.User) mainmodel.Error {
 	tx, err := maindao.Db.Begin()
 	if err != nil {
-		return mainmodel.MakeError(1, fmt.Sprintf("fail: db.Begin, %v @user_create_dao\n", err))
+		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @user_create_dao\n", err))
 	}
 	rows, err := tx.Prepare("insert into user (id, name, age, bio) values(?, ?, ?, ?)")
 	if err != nil {
@@ -105,7 +105,7 @@ func UserUpdate(u mainmodel.User) mainmodel.Error {
 	tx, err := maindao.Db.Begin()
 
 	if err != nil {
-		return mainmodel.MakeError(1, fmt.Sprintf("fail: db.Begin, %v @user_update_dao\n", err))
+		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @user_update_dao\n", err))
 	}
 
 	rows, err := tx.Prepare("update user set (name, bio, age) where id=?")
