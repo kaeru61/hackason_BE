@@ -3,11 +3,10 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"os"
 )
 
 func Handler() {
-	version := os.Getenv("VERSION")
+	version := 1
 
 	http.HandleFunc(fmt.Sprintf("/v%s/post", version), postController)
 	http.HandleFunc(fmt.Sprintf("/v%s/user", version), userController)
