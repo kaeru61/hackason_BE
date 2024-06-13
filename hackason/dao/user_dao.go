@@ -1,22 +1,22 @@
 package dao
 
 import (
-	"database/sql"
-	"db/model"
+	"db/dao/maindao"
+	"db/model/mainmodel"
 	"log"
 )
 
-func DaoSearch(name string, db *sql.DB) ([]model.User, error) {
-	rows, err := db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
+func DaoSearch(name string) ([]mainmodel.User, error) {
+	rows, err := maindao.Db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
 		return nil, err
 	}
 	defer rows.Close()
 
-	var users []model.User
+	var users []mainmodel.User
 	for rows.Next() {
-		var u model.User
+		var u mainmodel.User
 		if err := rows.Scan(&u.Id, &u.Name, &u.Age); err != nil {
 			return nil, err
 		}
@@ -26,7 +26,7 @@ func DaoSearch(name string, db *sql.DB) ([]model.User, error) {
 	return users, nil
 }
 
-func DaoRegister(id string, name string, age int, db *sql.DB) error {
-	_, err := db.Exec("INSERT INTO user (id, name, age) VALUES (?, ?, ?)", id, name, age)
+func DaoRegister(id string, name string, age int) error {
+	_, err := maindao.Db.Exec("INSERT INTO user (id, name, age) VALUES (?, ?, ?)", id, name, age)
 	return err
 }

@@ -1,24 +1,21 @@
 package main
 
 import (
-	"database/sql"
-	"db/application"
 	"db/controller"
-	"fmt"
+	"db/controller/usercontroller"
+	"db/dao/maindao"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
-	"os"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		controller.UserSearchController(w, r, db)
+		usercontroller.UserSearchController(w, r)
 		return
 	case http.MethodPost:
-		controller.UserRegisterController(w, r, db)
+		usercontroller.UserRegisterController(w, r)
 		return
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
@@ -28,9 +25,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	controller.Handler()
 	http.HandleFunc("/user", handler)
 
-	application.CloseDBWithSysCall(db)
+	maindao.CloseDBWithSysCall()
 
 	log.Println("Listening...")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
@@ -38,25 +36,6 @@ func main() {
 	}
 }
 
-var db *sql.DB
-
 func init() {
-	// ①-1
-	// DB接続のための準備
-	mysqlUser := os.Getenv("MYSQL_USER")
-	mysqlPwd := os.Getenv("MYSQL_PWD")
-	mysqlHost := os.Getenv("MYSQL_HOST")
-	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
-
-	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
-	db, err := sql.Open("mysql", connStr)
-
-	// ①-2
-	if err != nil {
-		log.Fatalf("fail: sql.Open, %v\n", err)
-	}
-	// ①-3
-	if err := db.Ping(); err != nil {
-		log.Fatalf("fail: db.Ping, %v\n", err)
-	}
+	maindao.OpenSQL()
 }

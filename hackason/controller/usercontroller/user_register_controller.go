@@ -1,8 +1,7 @@
-package controller
+package usercontroller
 
 import (
-	"database/sql"
-	"db/application"
+	"db/application/userapplication"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -12,7 +11,7 @@ import (
 	"github.com/oklog/ulid/v2"
 )
 
-func UserRegisterController(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func UserRegisterController(w http.ResponseWriter, r *http.Request) {
 	type info struct {
 		Name string `json:"name"`
 		Age  int    `json:"age"`
@@ -35,7 +34,7 @@ func UserRegisterController(w http.ResponseWriter, r *http.Request, db *sql.DB) 
 	}
 	idA := ulid.Make()
 	id := idA.String()
-	err := application.UserRegisterApplication(id, name, age, db)
+	err := userapplication.UserRegisterApplication(id, name, age)
 	if err != nil {
 		log.Printf("fail: db.Exec, %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)

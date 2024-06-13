@@ -1,8 +1,7 @@
-package controller
+package usercontroller
 
 import (
-	"database/sql"
-	"db/application"
+	"db/application/userapplication"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,10 +9,10 @@ import (
 
 var name string
 
-func UserSearchController(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func UserSearchController(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()
 	name = queryParams.Get("name")
-	users, err := application.UserSearchApplication(name, db)
+	users, err := userapplication.UserSearchApplication(name)
 	if err != nil {
 		log.Printf("fail: json.Marshal, %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
