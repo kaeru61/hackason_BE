@@ -22,7 +22,7 @@ func PostGet(postId string) (makeupmodel.PostInfo, error) {
 }
 
 func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
-	rows, err := maindao.Db.Query(`SELECT * FROM post WHERE postId = ?`, postId)
+	rows, err := maindao.Db.Query(`SELECT * FROM post WHERE id = ?`, postId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @postGetPost, %v\n", err)
 	}
