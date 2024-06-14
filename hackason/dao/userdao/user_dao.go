@@ -36,7 +36,7 @@ func userGetUserByUserId(userId string, userInfo *makeupmodel.UserInfo) error {
 	for rows.Next() {
 		var u mainmodel.User
 		if err := rows.Scan(
-			&u.Id, &u.Name, &u.Bio, &u.Age,
+			&u.Id, &u.Name, &u.Age, &u.Bio,
 		); err != nil {
 			log.Printf("fail: rows.Scan @userGetUserByUserId, %v\n", err)
 			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @userGetUserByUserId, %v\n", err))
@@ -63,7 +63,7 @@ func userGetUserByUserName(userName string, userInfo *makeupmodel.UserInfo) erro
 	for rows.Next() {
 		var u mainmodel.User
 		if err := rows.Scan(
-			&u.Id, &u.Name, &u.Bio, &u.Age,
+			&u.Id, &u.Name, &u.Age, &u.Bio,
 		); err != nil {
 			log.Printf("fail: rows.Scan @userGetUserByUserName, %v\n", err)
 			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @userGetUserByUserName, %v\n", err))
