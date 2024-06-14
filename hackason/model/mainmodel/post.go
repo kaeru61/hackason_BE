@@ -1,8 +1,8 @@
 package mainmodel
 
 type Post struct {
-	UserId   string `json:"userId"`
 	Id       string `json:"id"`
+	UserId   string `json:"userId"`
 	Body     string `json:"body"`
 	ParentId string `json:"parentId"`
 	CreateAt string `json:"createAt"`

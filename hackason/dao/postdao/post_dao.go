@@ -29,7 +29,7 @@ func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
 	for rows.Next() {
 		var p mainmodel.Post
 		if err := rows.Scan(
-			&p.UserId, &p.Id, &p.Body, &p.ParentId, &p.CreateAt, &p.Deleted,
+			&p.Id, &p.UserId, &p.Body, &p.ParentId, &p.CreateAt, &p.Deleted,
 		); err != nil {
 			log.Printf("fail: rows.Scan @postGetPost, %v\n", err)
 			postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetPost, %v\n", err))

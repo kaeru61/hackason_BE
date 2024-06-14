@@ -57,8 +57,14 @@ func postGet(w http.ResponseWriter, r *http.Request) {
 
 func postCreate(w http.ResponseWriter, r *http.Request) {
 	var postC makeupmodel.PostCUD
-
-	if err := json.NewDecoder(r.Body).Decode(&postC); err != nil {
+	type PostCInfo struct {
+		UserId   string `json:"userId"`
+		Body     string `json:"body"`
+		ParentId string `json:"parentId"`
+		CreateAt string `json:"createAt"`
+	}
+	var postCInfo PostCInfo
+	if err := json.NewDecoder(r.Body).Decode(&postCInfo); err != nil {
 		log.Printf("fail: json.NewDecoder, %v\n", err)
 		w.WriteHeader(http.StatusInsufficientStorage)
 		return
@@ -68,6 +74,14 @@ func postCreate(w http.ResponseWriter, r *http.Request) {
 	id := idA.String()
 
 	postC.Post.Id = id
+	if postC.Post.ParentId == "" {
+		postC.Post.ParentId = id
+	}
+
+	postC.Post.UserId = postCInfo.UserId
+	postC.Post.Body = postCInfo.Body
+	postC.Post.ParentId = postCInfo.ParentId
+	postC.Post.CreateAt = postCInfo.CreateAt
 
 	err := application.PostCreate(postC)
 	if err.Code == 1 {
