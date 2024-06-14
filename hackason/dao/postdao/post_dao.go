@@ -50,8 +50,8 @@ func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
 func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
 	rows, err := maindao.Db.Query(`SELECT id, userId, body, parentId, createAt, deleted FROM post WHERE parentId = ?`, postId)
 	if err != nil {
-		log.Printf("fail: hackason.Query @messageGetMessage, %v\n", err)
-		postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @messageGetReply, %v\n", err))
+		log.Printf("fail: hackason.Query @postGetReply, %v\n", err)
+		postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetReply, %v\n", err))
 		return err
 	}
 	for rows.Next() {

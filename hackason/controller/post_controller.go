@@ -66,7 +66,7 @@ func postCreate(w http.ResponseWriter, r *http.Request) {
 	var postCInfo PostCInfo
 	if err := json.NewDecoder(r.Body).Decode(&postCInfo); err != nil {
 		log.Printf("fail: json.NewDecoder, %v\n", err)
-		w.WriteHeader(http.StatusInsufficientStorage)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
