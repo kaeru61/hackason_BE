@@ -82,10 +82,10 @@ func userCreate(w http.ResponseWriter, r *http.Request) {
 	}
 	idA := ulid.Make()
 	id := idA.String()
-	userC.Id = id
-	userC.Name = info.Name
-	userC.Age = info.Age
-	userC.Bio = info.Bio
+	userC.User.Id = id
+	userC.User.Name = info.Name
+	userC.User.Age = info.Age
+	userC.User.Bio = info.Bio
 	err := application.UserCreate(userC)
 	if err.Code == 1 {
 		log.Printf("fail: application.UserCreate, %v\n", err)
