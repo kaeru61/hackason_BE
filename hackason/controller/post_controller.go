@@ -4,6 +4,7 @@ import (
 	"db/application"
 	"db/model/makeupmodel"
 	"encoding/json"
+	"github.com/oklog/ulid/v2"
 	"log"
 	"net/http"
 )
@@ -62,6 +63,11 @@ func postCreate(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInsufficientStorage)
 		return
 	}
+
+	idA := ulid.Make()
+	id := idA.String()
+
+	postC.Post.Id = id
 
 	err := application.PostCreate(postC)
 	if err.Code == 1 {
