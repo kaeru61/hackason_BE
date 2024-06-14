@@ -4,6 +4,7 @@ import (
 	"db/application"
 	"db/model/makeupmodel"
 	"encoding/json"
+	"github.com/oklog/ulid/v2"
 	"log"
 	"net/http"
 )
@@ -67,13 +68,24 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 
 func userCreate(w http.ResponseWriter, r *http.Request) {
 	var userC makeupmodel.UserCUD
+	type Info struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+		Bio  string `json:"bio"`
+	}
+	var info Info
 
-	if err := json.NewDecoder(r.Body).Decode(&userC); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&info); err != nil {
 		log.Printf("fail: json.NewDecoder, %v\n", err)
-		w.WriteHeader(http.StatusInsufficientStorage)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	idA := ulid.Make()
+	id := idA.String()
+	userC.Id = id
+	userC.Name = info.Name
+	userC.Age = info.Age
+	userC.Bio = info.Bio
 	err := application.UserCreate(userC)
 	if err.Code == 1 {
 		log.Printf("fail: application.UserCreate, %v\n", err)

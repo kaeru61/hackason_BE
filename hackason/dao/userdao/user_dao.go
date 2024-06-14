@@ -85,7 +85,7 @@ func UserCreate(u mainmodel.User) mainmodel.Error {
 	if err != nil {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @user_create_dao\n", err))
 	}
-	rows, err := tx.Prepare("insert into user (id, name, age, bio) values(?, ?, ?, ?)")
+	rows, err := tx.Prepare("insert into user (id, name, age, bio) values　(?, ?, ?, ?)")
 	if err != nil {
 		tx.Rollback()
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Prepare, %v @user_create_dao\n", err))
