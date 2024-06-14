@@ -22,14 +22,14 @@ func PostGet(postId string) (makeupmodel.PostInfo, error) {
 }
 
 func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
-	rows, err := maindao.Db.Query(`SELECT * FROM post WHERE id = ?`, postId)
+	rows, err := maindao.Db.Query(`SELECT id, userId, body, parentId, createAt, deleted  FROM post WHERE id = ?`, postId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @postGetPost, %v\n", err)
 	}
 	for rows.Next() {
 		var p mainmodel.Post
 		if err := rows.Scan(
-			&p.Id, &p.UserId, &p.Body, &p.CreateAt, &p.Deleted, &p.ParentId,
+			&p.UserId, &p.Id, &p.Body, &p.ParentId, &p.CreateAt, &p.Deleted,
 		); err != nil {
 			log.Printf("fail: rows.Scan @postGetPost, %v\n", err)
 			postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetPost, %v\n", err))
@@ -48,7 +48,7 @@ func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
 }
 
 func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
-	rows, err := maindao.Db.Query(`SELECT * FROM post WHERE parentId = ?`, postId)
+	rows, err := maindao.Db.Query(`SELECT id, userId, body, parentId, createAt, deleted FROM post WHERE parentId = ?`, postId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @messageGetMessage, %v\n", err)
 		postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @messageGetReply, %v\n", err))
