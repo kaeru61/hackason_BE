@@ -19,6 +19,3 @@ type UserInfo struct {
 	User            mainmodel.User `json:"user"`
 	mainmodel.Error `json:"error"`
 }
-
-type LikeInfo struct {
-}
