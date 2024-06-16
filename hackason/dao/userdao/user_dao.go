@@ -1,6 +1,7 @@
 package userdao
 
 import (
+	"db/dao/followsdao"
 	"db/dao/maindao"
 	"db/model/mainmodel"
 	"db/model/makeupmodel"
@@ -14,12 +15,45 @@ func UserGetUserByUserId(userId string) (makeupmodel.UserInfo, error) {
 		log.Println("An Error occured at user_dao.go", err)
 		return userInfo, err
 	}
+	if err := followsdao.FollowsGetFollowing(userId, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
+	if err := followsdao.FollowsGetFollower(userId, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
+	if err := userGetPosts(userId, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
+	if err := userGetLikes(userId, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
 	return userInfo, nil
 }
 
 func UserGetUserByUserName(userName string) (makeupmodel.UserInfo, error) {
 	var userInfo makeupmodel.UserInfo
 	if err := userGetUserByUserName(userName, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
+	userId := userInfo.User.Id
+	if err := followsdao.FollowsGetFollowing(userId, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
+	if err := followsdao.FollowsGetFollower(userId, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
+	if err := userGetPosts(userId, &userInfo); err != nil {
+		log.Println("An Error occured at user_dao.go", err)
+		return userInfo, err
+	}
+	if err := userGetLikes(userId, &userInfo); err != nil {
 		log.Println("An Error occured at user_dao.go", err)
 		return userInfo, err
 	}
@@ -76,6 +110,62 @@ func userGetUserByUserName(userName string, userInfo *makeupmodel.UserInfo) erro
 			return err
 		}
 		userInfo.User = u
+	}
+	return nil
+}
+
+func userGetPosts(userId string, userInfo *makeupmodel.UserInfo) error {
+	rows, err := maindao.Db.Query(`SELECT id, userId, body, parentId, createAt, deleted FROM post WHERE userId = ?`, userId)
+	if err != nil {
+		log.Printf("fail: hackason.Query @postGetReply, %v\n", err)
+		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetReply, %v\n", err))
+		return err
+	}
+	for rows.Next() {
+		var p mainmodel.Post
+		if err := rows.Scan(
+			&p.Id, &p.UserId, &p.Body, &p.CreateAt, &p.ParentId, &p.Deleted,
+		); err != nil {
+			log.Printf("fail: rows.Scan @postGetReply, %v\n", err)
+			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Scan @postGetReply, %v\n", err))
+
+			if err_ := rows.Close(); err_ != nil {
+				log.Printf("fail: rows.Close @postGetReply, %v\n", err_)
+				userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @postGetReply, %v\n", err))
+				return err
+			}
+
+			return err
+		}
+		userInfo.Posts = append(userInfo.Posts, p)
+	}
+	return nil
+}
+
+func userGetLikes(userId string, userInfo *makeupmodel.UserInfo) error {
+	rows, err := maindao.Db.Query(`SELECT id, userId, body, parentId, createAt, deleted FROM(SELECT * FROM post INNER JOIN like on post.id = like.postId where like.userId = ?) `, userId)
+	if err != nil {
+		log.Printf("fail: hackason.Query @postGetReply, %v\n", err)
+		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetReply, %v\n", err))
+		return err
+	}
+	for rows.Next() {
+		var p mainmodel.Post
+		if err := rows.Scan(
+			&p.Id, &p.UserId, &p.Body, &p.CreateAt, &p.ParentId, &p.Deleted,
+		); err != nil {
+			log.Printf("fail: rows.Scan @postGetReply, %v\n", err)
+			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Scan @postGetReply, %v\n", err))
+
+			if err_ := rows.Close(); err_ != nil {
+				log.Printf("fail: rows.Close @postGetReply, %v\n", err_)
+				userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @postGetReply, %v\n", err))
+				return err
+			}
+
+			return err
+		}
+		userInfo.Likes = append(userInfo.Likes, p)
 	}
 	return nil
 }

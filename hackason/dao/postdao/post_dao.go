@@ -18,6 +18,10 @@ func PostGet(postId string) (makeupmodel.PostInfo, error) {
 		log.Println("An Error occured at post_dao.go", err)
 		return postInfo, err
 	}
+	if err := postGetLikedBy(postId, &postInfo); err != nil {
+		log.Println("An Error occured at post_dao.go", err)
+		return postInfo, err
+	}
 	return postInfo, nil
 }
 
@@ -71,6 +75,29 @@ func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
 			return err
 		}
 		postInfo.Replies = append(postInfo.Replies, p)
+	}
+	return nil
+}
+
+func postGetLikedBy(postId string, postInfo *makeupmodel.PostInfo) error {
+	rows, err := maindao.Db.Query("select id, name, age, bio from(select * from user inner join like on user.id = like.userId where like.postId = ?) ", postId)
+	if err != nil {
+		log.Printf("fail: hackason.Query @likeAboutPostGetUser, %v\n", err)
+	}
+	for rows.Next() {
+		var u mainmodel.User
+		if err := rows.Scan(&u.Id, &u.Name, &u.Age, &u.Bio); err != nil {
+			log.Printf("fail: hackason.Query @likeAboutPostGetUser, %v\n", err)
+			postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @LikeAboutPostGetUser, %v\n", err))
+
+			if err_ := rows.Close(); err_ != nil {
+				log.Printf("fail: rows.Close @LikeAboutPostGetUser, %v\n", err_)
+				postInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @LikeAboutPostGetUser, %v\n", err))
+				return err
+			}
+			return err
+		}
+		postInfo.LikedBy = append(postInfo.LikedBy, u)
 	}
 	return nil
 }

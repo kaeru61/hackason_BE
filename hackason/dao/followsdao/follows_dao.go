@@ -8,24 +8,7 @@ import (
 	"log"
 )
 
-func FollowsGet(userId string) (makeupmodel.FollowsInfo, error) {
-	var followsInfo makeupmodel.FollowsInfo
-	if err := followsGetUser(userId, &followsInfo); err != nil {
-		log.Println("An error occured at follows_dao.go", err)
-		return followsInfo, err
-	}
-	if err := followsGetFollowing(userId, &followsInfo); err != nil {
-		log.Println("An error occured at follows_dao.go", err)
-		return followsInfo, err
-	}
-	if err := followsGetFollower(userId, &followsInfo); err != nil {
-		log.Println("An error occured at follows_dao.go", err)
-		return followsInfo, err
-	}
-	return followsInfo, nil
-}
-
-func followsGetUser(userId string, followsInfo *makeupmodel.FollowsInfo) error {
+func FollowsGetUser(userId string, followsInfo *makeupmodel.FollowsInfo) error {
 	rows, err := maindao.Db.Query(`SELECT id, name, age, bio FROM user WHERE  id = ?`, userId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @followsGetUser, %v\n", err)
@@ -51,11 +34,11 @@ func followsGetUser(userId string, followsInfo *makeupmodel.FollowsInfo) error {
 
 }
 
-func followsGetFollowing(userId string, followsInfo *makeupmodel.FollowsInfo) error {
+func FollowsGetFollowing(userId string, userInfo *makeupmodel.UserInfo) error {
 	rows, err := maindao.Db.Query(`SELECT id, name, age, bio FROM user INNER JOIN follows ON user.id = follows.followerUId WHERE followingUId = ?`, userId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @followsGetFollowing, %v\n", err)
-		followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @messageGetReply, %v\n", err))
+		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @messageGetReply, %v\n", err))
 		return err
 	}
 	for rows.Next() {
@@ -64,26 +47,26 @@ func followsGetFollowing(userId string, followsInfo *makeupmodel.FollowsInfo) er
 			&u.Id, &u.Name, &u.Age, &u.Bio,
 		); err != nil {
 			log.Printf("fail: rows.Scan @followsGetFollowing, %v\n", err)
-			followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Scan @followsGetFollowing, %v\n", err))
+			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Scan @followsGetFollowing, %v\n", err))
 
 			if err_ := rows.Close(); err_ != nil {
 				log.Printf("fail: rows.Close @followsGetFollowing, %v\n", err_)
-				followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @followsGetFollowing, %v\n", err))
+				userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @followsGetFollowing, %v\n", err))
 				return err
 			}
 
 			return err
 		}
-		followsInfo.Followings = append(followsInfo.Followings, u)
+		userInfo.Followings = append(userInfo.Followings, u)
 	}
 	return nil
 }
 
-func followsGetFollower(userId string, followsInfo *makeupmodel.FollowsInfo) error {
+func FollowsGetFollower(userId string, userInfo *makeupmodel.UserInfo) error {
 	rows, err := maindao.Db.Query(`SELECT id, name, age, bio FROM user INNER JOIN follows ON user.id = follows.followingUId WHERE followerUId = ?`, userId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @followsGetFollower, %v\n", err)
-		followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @followsGetFollower, %v\n", err))
+		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @followsGetFollower, %v\n", err))
 		return err
 	}
 	for rows.Next() {
@@ -92,17 +75,17 @@ func followsGetFollower(userId string, followsInfo *makeupmodel.FollowsInfo) err
 			&u.Id, &u.Name, &u.Age, &u.Bio,
 		); err != nil {
 			log.Printf("fail: rows.Scan @followsGetFollower, %v\n", err)
-			followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Scan @followsGetFollower, %v\n", err))
+			userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Scan @followsGetFollower, %v\n", err))
 
 			if err_ := rows.Close(); err_ != nil {
 				log.Printf("fail: rows.Close @followsGetFollower, %v\n", err_)
-				followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @followsGetFollower, %v\n", err))
+				userInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @followsGetFollower, %v\n", err))
 				return err
 			}
 
 			return err
 		}
-		followsInfo.Followers = append(followsInfo.Followers, u)
+		userInfo.Followers = append(userInfo.Followers, u)
 	}
 	return nil
 }

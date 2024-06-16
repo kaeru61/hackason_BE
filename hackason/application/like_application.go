@@ -1,6 +1,5 @@
 package application
 
-import "C"
 import (
 	"db/dao/likedao"
 	"db/model/mainmodel"
