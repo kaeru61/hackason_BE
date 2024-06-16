@@ -65,7 +65,7 @@ func likeDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := application.LikeCreate(likeD)
+	err := application.LikeDelete(likeD)
 	if err.Code == 1 {
 		log.Printf("fail: application.FollowsCreate, %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
