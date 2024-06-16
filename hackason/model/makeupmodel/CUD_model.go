@@ -6,7 +6,7 @@ type PostCUD struct {
 	mainmodel.Post `json:"post"`
 }
 
-type FollowsCD struct {
+type FollowsCUD struct {
 	mainmodel.Follows `json:"follows"`
 }
 

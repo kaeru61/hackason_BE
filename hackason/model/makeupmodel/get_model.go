@@ -5,7 +5,7 @@ import "db/model/mainmodel"
 type PostInfo struct {
 	Root            mainmodel.Post   `json:"root"`
 	Replies         []mainmodel.Post `json:"replies"`
-	LikedBy         []mainmodel.User
+	LikedBy         []mainmodel.User `json:"likedBy"`
 	mainmodel.Error `json:"error"`
 }
 
@@ -22,17 +22,5 @@ type UserInfo struct {
 	Followers       []mainmodel.User `json:"followers"`
 	Posts           []mainmodel.Post `json:"posts"`
 	Likes           []mainmodel.Post `json:"likes"`
-	mainmodel.Error `json:"error"`
-}
-
-type LikeInfoAboutPost struct {
-	Post            mainmodel.Post   `json:"post"`
-	User            []mainmodel.User `json:"user"`
-	mainmodel.Error `json:"error"`
-}
-
-type LikeInfoAboutUser struct {
-	User            mainmodel.User   `json:"user"`
-	Post            []mainmodel.Post `json:"post"`
 	mainmodel.Error `json:"error"`
 }
