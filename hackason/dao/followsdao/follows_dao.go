@@ -8,32 +8,6 @@ import (
 	"log"
 )
 
-func FollowsGetUser(userId string, followsInfo *makeupmodel.FollowsInfo) error {
-	rows, err := maindao.Db.Query(`SELECT id, name, age, bio FROM user WHERE  id = ?`, userId)
-	if err != nil {
-		log.Printf("fail: hackason.Query @followsGetUser, %v\n", err)
-	}
-	for rows.Next() {
-		var u mainmodel.User
-		if err := rows.Scan(
-			&u.Id, &u.Name, &u.Age, &u.Bio,
-		); err != nil {
-			log.Printf("fail: rows.Scan @followsGetUser, %v\n", err)
-			followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @followGetUser, %v\n", err))
-
-			if err_ := rows.Close(); err_ != nil {
-				log.Printf("fail: rows.Close @followsGetUser, %v\n", err_)
-				followsInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @postGetPost, %v\n", err))
-				return err_
-			}
-			return err
-		}
-		followsInfo.User = u
-	}
-	return nil
-
-}
-
 func FollowsGetFollowing(userId string, userInfo *makeupmodel.UserInfo) error {
 	rows, err := maindao.Db.Query(`SELECT id, name, age, bio FROM user INNER JOIN follows ON user.id = follows.followerUId WHERE followingUId = ?`, userId)
 	if err != nil {

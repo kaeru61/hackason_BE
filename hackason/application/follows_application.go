@@ -5,17 +5,7 @@ import (
 	"db/model/mainmodel"
 	"db/model/makeupmodel"
 	"fmt"
-	"log"
 )
-
-func FollowsGet(userId string) makeupmodel.FollowsInfo {
-	followsInfo, err := followsdao.FollowsGet(userId)
-	if err != nil {
-		log.Println("An error occurred at applocation/FollowsGet", err)
-		return followsInfo
-	}
-	return followsInfo
-}
 
 func FollowsCreate(followsC makeupmodel.FollowsCD) mainmodel.Error {
 	fmt.Println(followsC.Follows.Id)

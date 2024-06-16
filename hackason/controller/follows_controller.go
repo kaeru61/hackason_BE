@@ -12,14 +12,11 @@ import (
 func followsController(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, DELETE, OPTIONS")
 
 	switch r.Method {
 	case http.MethodOptions:
 		w.WriteHeader(http.StatusOK)
-		return
-	case http.MethodGet:
-		followsGet(w, r)
 		return
 	case http.MethodPost:
 		followsCreate(w, r)
@@ -32,24 +29,6 @@ func followsController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-}
-
-func followsGet(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query()
-	userId := query.Get("id")
-
-	followsInfo := application.FollowsGet(userId)
-	if followsInfo.Error.Code == 1 {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	bytes, err := json.Marshal(followsInfo)
-	if err != nil {
-		log.Printf("fail: json.Marshal, %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Write(bytes)
 }
 
 func followsCreate(w http.ResponseWriter, r *http.Request) {
