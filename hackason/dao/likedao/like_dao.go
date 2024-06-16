@@ -8,6 +8,8 @@ import (
 	"log"
 )
 
+//likeのみの情報はいらない
+
 func LikeAboutPostGet(postId string) (makeupmodel.LikeInfoAboutPost, error) {
 	var likeInfoPost makeupmodel.LikeInfoAboutPost
 	err := likeAboutPostGetPost(postId, &likeInfoPost)
