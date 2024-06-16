@@ -53,7 +53,7 @@ func followsGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func followsCreate(w http.ResponseWriter, r *http.Request) {
-	var followsC makeupmodel.FollowsCD
+	var followsC makeupmodel.FollowsCUD
 	type FollowsCInfo struct {
 		FollowingUId string `json:"followingUId"`
 		FollowerUId  string `json:"followerUId"`
@@ -87,7 +87,7 @@ func followsCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func followsDelete(w http.ResponseWriter, r *http.Request) {
-	var followsD makeupmodel.FollowsCD
+	var followsD makeupmodel.FollowsCUD
 	if err := json.NewDecoder(r.Body).Decode(&followsD); err != nil {
 		log.Printf("fail: json.NewDecoder, %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)

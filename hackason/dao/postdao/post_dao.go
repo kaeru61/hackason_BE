@@ -103,7 +103,7 @@ func PostDelete(id string) mainmodel.Error {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @post_delete_dao\n", err))
 	}
 
-	rows, err := tx.Prepare("update post set deleted=? where id=?")
+	rows, err := tx.Prepare("update message set deleted=? where id=?")
 	if err != nil {
 		tx.Rollback()
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Prepare, %v @post_delete_dao\n", err))

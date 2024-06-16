@@ -24,15 +24,3 @@ type UserInfo struct {
 	Likes           []mainmodel.Post `json:"likes"`
 	mainmodel.Error `json:"error"`
 }
-
-type LikeInfoAboutPost struct {
-	Post            mainmodel.Post   `json:"post"`
-	User            []mainmodel.User `json:"user"`
-	mainmodel.Error `json:"error"`
-}
-
-type LikeInfoAboutUser struct {
-	User            mainmodel.User   `json:"user"`
-	Post            []mainmodel.Post `json:"post"`
-	mainmodel.Error `json:"error"`
-}
