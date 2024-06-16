@@ -13,3 +13,7 @@ type FollowsCUD struct {
 type UserCUD struct {
 	mainmodel.User `json:"user"`
 }
+
+type LikeCD struct {
+	mainmodel.Like `json:"like"`
+}
