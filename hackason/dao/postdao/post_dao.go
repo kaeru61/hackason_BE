@@ -10,7 +10,7 @@ import (
 
 func PostGetAllPost() ([]makeupmodel.PostInfo, error) {
 	var posts []makeupmodel.PostInfo
-	rows, err := maindao.Db.Query(`SELECT id FROM post WHERE deleted = false ORDER BY createAt DESC`)
+	rows, err := maindao.Db.Query(`SELECT id FROM post WHERE deleted = false AND id = parentId ORDER BY createAt DESC`)
 	if err != nil {
 		return posts, err
 	}
