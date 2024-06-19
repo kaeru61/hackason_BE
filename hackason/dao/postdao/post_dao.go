@@ -100,7 +100,7 @@ func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
 }
 
 func postGetLikedBy(postId string, postInfo *makeupmodel.PostInfo) error {
-	rows, err := maindao.Db.Query("select id, name, age, bio from(select * from user inner join like on user.id = like.userId where like.postId = ?) ", postId)
+	rows, err := maindao.Db.Query("select id, name, age, bio from (select * from user inner join like on user.id = like.userId where like.postId = ?) ", postId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @likeAboutPostGetUser, %v\n", err)
 	}
