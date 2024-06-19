@@ -8,6 +8,26 @@ import (
 	"log"
 )
 
+func PostGetAllPost() ([]makeupmodel.PostInfo, error) {
+	var posts []makeupmodel.PostInfo
+	rows, err := maindao.Db.Query(`SELECT id FROM post ORDER BY createAt DESC`)
+	if err != nil {
+		return posts, err
+	}
+	for rows.Next() {
+		var p string
+		if err := rows.Scan(&p); err != nil {
+			return posts, err
+			if err := rows.Close(); err != nil {
+				return posts, err
+			}
+		}
+		post, _ := PostGet(p)
+		posts = append(posts, post)
+	}
+	return posts, nil
+}
+
 func PostGet(postId string) (makeupmodel.PostInfo, error) {
 	var postInfo makeupmodel.PostInfo
 	if err := postGetPost(postId, &postInfo); err != nil {

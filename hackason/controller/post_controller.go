@@ -40,19 +40,29 @@ func postController(w http.ResponseWriter, r *http.Request) {
 func postGet(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	postId := query.Get("id")
-
-	postInfo := application.PostGet(postId)
-	if postInfo.Error.Code == 1 {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+	if postId != "" {
+		postInfo := application.PostGet(postId)
+		if postInfo.Error.Code == 1 {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		bytes, err := json.Marshal(postInfo)
+		if err != nil {
+			log.Printf("fail: json.Marshal, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Write(bytes)
+	} else {
+		postInfos := application.PostGetAllPost()
+		bytes, err := json.Marshal(postInfos)
+		if err != nil {
+			log.Printf("fail: json.Marshal, %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Write(bytes)
 	}
-	bytes, err := json.Marshal(postInfo)
-	if err != nil {
-		log.Printf("fail: json.Marshal, %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Write(bytes)
 }
 
 func postCreate(w http.ResponseWriter, r *http.Request) {

@@ -9,6 +9,15 @@ import (
 	"log"
 )
 
+func PostGetAllPost() []makeupmodel.PostInfo {
+	postInfos, err := postdao.PostGetAllPost()
+	if err != nil {
+		log.Fatal(err)
+		return postInfos
+	}
+	return postInfos
+}
+
 func PostGet(postId string) makeupmodel.PostInfo {
 	postInfo, err := postdao.PostGet(postId)
 	if err != nil {
