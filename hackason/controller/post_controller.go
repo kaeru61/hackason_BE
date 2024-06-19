@@ -53,7 +53,7 @@ func postGet(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.Write(bytes)
-	} else {
+	} else if postId == "" {
 		postInfos := application.PostGetAllPost()
 		bytes, err := json.Marshal(postInfos)
 		if err != nil {
