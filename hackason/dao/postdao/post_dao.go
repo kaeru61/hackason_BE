@@ -10,7 +10,7 @@ import (
 
 func PostGetAllPost() ([]makeupmodel.PostInfo, error) {
 	var posts []makeupmodel.PostInfo
-	rows, err := maindao.Db.Query(`SELECT id FROM post ORDER BY createAt DESC`)
+	rows, err := maindao.Db.Query(`SELECT id FROM post WHERE deleted = false ORDER BY createAt DESC`)
 	if err != nil {
 		return posts, err
 	}
@@ -100,7 +100,7 @@ func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
 }
 
 func postGetLikedBy(postId string, postInfo *makeupmodel.PostInfo) error {
-	rows, err := maindao.Db.Query("select id, name, age, bio from (select * from user inner join like on user.id = like.userId where like.postId = ?) ", postId)
+	rows, err := maindao.Db.Query("SELECT user.id, user.name, user.age, user.bio FROM user INNER JOIN `like` ON user.id = `like`.userId WHERE `like`.postId = ?", postId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @likeAboutPostGetUser, %v\n", err)
 	}
@@ -150,7 +150,7 @@ func PostDelete(id string) mainmodel.Error {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @post_delete_dao\n", err))
 	}
 
-	rows, err := tx.Prepare("update message set deleted=? where id=?")
+	rows, err := tx.Prepare("update post set deleted=? where id=?")
 	if err != nil {
 		tx.Rollback()
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Prepare, %v @post_delete_dao\n", err))

@@ -143,7 +143,7 @@ func userGetPosts(userId string, userInfo *makeupmodel.UserInfo) error {
 }
 
 func userGetLikes(userId string, userInfo *makeupmodel.UserInfo) error {
-	rows, err := maindao.Db.Query(`SELECT id, userId, body, parentId, createAt, deleted FROM(SELECT * FROM post INNER JOIN like on post.id = like.postId where like.userId = ?) `, userId)
+	rows, err := maindao.Db.Query("SELECT post.id, post.userId, post.body, post.parentId, post.createAt, post.deleted FROM post INNER JOIN `like` on post.id = `like`.postId where `like`.userId = ? ", userId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @postGetReply, %v\n", err)
 		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetReply, %v\n", err))

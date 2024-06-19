@@ -12,7 +12,7 @@ func LikeCreate(l mainmodel.Like) mainmodel.Error {
 	if err != nil {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @like_create_dao\n", err))
 	}
-	rows, err := tx.Prepare("insert into like (id, userId, postId, createAt) values(?, ?, ?, ?)")
+	rows, err := tx.Prepare("insert into `like` (id, userId, postId, createAt) values(?, ?, ?, ?)")
 	if err != nil {
 		tx.Rollback()
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Prepare, %v @like_create_dao\n", err))
@@ -35,7 +35,7 @@ func LikeDelete(likeId string) mainmodel.Error {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @like_delete_dao\n", err))
 	}
 
-	rows, err := tx.Prepare("delete from like where id = ?")
+	rows, err := tx.Prepare("delete from `like` where id = ?")
 	if err != nil {
 		tx.Rollback()
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Prepare, %v @like_delete_dao\n", err))
