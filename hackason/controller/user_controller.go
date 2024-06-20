@@ -4,7 +4,6 @@ import (
 	"db/application"
 	"db/model/makeupmodel"
 	"encoding/json"
-	"github.com/oklog/ulid/v2"
 	"log"
 	"net/http"
 )
@@ -69,6 +68,7 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 func userCreate(w http.ResponseWriter, r *http.Request) {
 	var userC makeupmodel.UserCUD
 	type Info struct {
+		Id   string `json:"id"`
 		Name string `json:"name"`
 		Age  int    `json:"age"`
 		Bio  string `json:"bio"`
@@ -80,9 +80,8 @@ func userCreate(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	idA := ulid.Make()
-	id := idA.String()
-	userC.User.Id = id
+	
+	userC.User.Id = info.Id
 	userC.User.Name = info.Name
 	userC.User.Age = info.Age
 	userC.User.Bio = info.Bio
