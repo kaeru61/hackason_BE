@@ -80,7 +80,7 @@ func userCreate(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	
+
 	userC.User.Id = info.Id
 	userC.User.Name = info.Name
 	userC.User.Age = info.Age

@@ -9,7 +9,7 @@ import (
 )
 
 func FollowsGetFollowing(userId string, userInfo *makeupmodel.UserInfo) error {
-	rows, err := maindao.Db.Query(`SELECT id, name, age, bio FROM user INNER JOIN follows ON user.id = follows.followerUId WHERE followingUId = ?`, userId)
+	rows, err := maindao.Db.Query(`SELECT user.id, user.name, user.age, user.bio FROM user INNER JOIN follows ON user.id = follows.followerUId WHERE followingUId = ?`, userId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @followsGetFollowing, %v\n", err)
 		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @messageGetReply, %v\n", err))
@@ -37,7 +37,7 @@ func FollowsGetFollowing(userId string, userInfo *makeupmodel.UserInfo) error {
 }
 
 func FollowsGetFollower(userId string, userInfo *makeupmodel.UserInfo) error {
-	rows, err := maindao.Db.Query(`SELECT id, name, age, bio FROM user INNER JOIN follows ON user.id = follows.followingUId WHERE followerUId = ?`, userId)
+	rows, err := maindao.Db.Query(`SELECT user.id, user.name, user.age, user.bio FROM user INNER JOIN follows ON user.id = follows.followingUId WHERE followerUId = ?`, userId)
 	if err != nil {
 		log.Printf("fail: hackason.Query @followsGetFollower, %v\n", err)
 		userInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @followsGetFollower, %v\n", err))
