@@ -84,8 +84,8 @@ func postCreate(w http.ResponseWriter, r *http.Request) {
 	id := idA.String()
 
 	postC.Post.Id = id
-	if postC.Post.ParentId == "" {
-		postC.Post.ParentId = id
+	if postCInfo.ParentId == "" {
+		postCInfo.ParentId = id
 	}
 
 	postC.Post.UserId = postCInfo.UserId
