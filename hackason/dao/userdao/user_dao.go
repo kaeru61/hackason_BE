@@ -198,13 +198,9 @@ func UserUpdate(u mainmodel.User) mainmodel.Error {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @user_update_dao\n", err))
 	}
 
-	rows, err := tx.Prepare("UPDATE user SET name = ?, bio = ?, age = ? WHERE id = ?")
-	if err != nil {
-		tx.Rollback()
-		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Prepare, %v @user_update_dao\n", err))
-	}
+	_, _err := tx.Exec("UPDATE user SET name = ?, bio = ?, age = ? WHERE id = ?", u.Name, u.Bio, u.Age, u.Id)
 
-	if _, err := rows.Exec(u.Name, u.Bio, u.Age, u.Id); err != nil {
+	if _err != nil {
 		tx.Rollback()
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Exec, %v @user_update_dao\n", err))
 	}
@@ -213,7 +209,7 @@ func UserUpdate(u mainmodel.User) mainmodel.Error {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Commit, %v @user_update_dao\n", err))
 	}
 
-	log.Printf("successfully updated post (ID: %s)", u.Id)
+	log.Printf("successfully updated user (ID: %s)", u.Id)
 
 	return mainmodel.NilError
 }
