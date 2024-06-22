@@ -104,7 +104,7 @@ func userCreate(w http.ResponseWriter, r *http.Request) {
 
 func userUpdate(w http.ResponseWriter, r *http.Request) {
 	var userU makeupmodel.UserCUD
-	if err := json.NewDecoder(r.Body).Decode(&userU); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&userU.User); err != nil {
 		log.Printf("fail: json.NewDecoder, %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
