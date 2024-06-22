@@ -4,6 +4,7 @@ import "db/model/mainmodel"
 
 type PostInfo struct {
 	Root            mainmodel.Post   `json:"root"`
+	User            mainmodel.User   `json:"user"`
 	Replies         []mainmodel.Post `json:"replies"`
 	LikedBy         []mainmodel.User `json:"likedBy"`
 	mainmodel.Error `json:"error"`

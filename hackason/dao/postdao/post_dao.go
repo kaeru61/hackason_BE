@@ -33,6 +33,11 @@ func PostGet(postId string) (makeupmodel.PostInfo, error) {
 	if err := postGetPost(postId, &postInfo); err != nil {
 		log.Println("An Error occured at post_dao.go", err)
 		return postInfo, err
+	} else {
+		if err := postGetUser(postInfo.Root.UserId, &postInfo); err != nil {
+			log.Println("An Error occured at post_dao.go", err)
+			return postInfo, err
+		}
 	}
 	if err := postGetReply(postId, &postInfo); err != nil {
 		log.Println("An Error occured at post_dao.go", err)
@@ -69,6 +74,33 @@ func postGetPost(postId string, postInfo *makeupmodel.PostInfo) error {
 	}
 	return nil
 
+}
+
+func postGetUser(userId string, postInfo *makeupmodel.PostInfo) error {
+	rows, err := maindao.Db.Query("select id, name, age, bio from user where id = ?", userId)
+	if err != nil {
+		log.Printf("fail: hackason.Query @postGetUserByUserId, %v\n", err)
+		postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetUserByUserId, %v\n", err))
+		return err
+	}
+	for rows.Next() {
+		var u mainmodel.User
+		if err := rows.Scan(
+			&u.Id, &u.Name, &u.Age, &u.Bio,
+		); err != nil {
+			log.Printf("fail: rows.Scan @postGetUserByUserId, %v\n", err)
+			postInfo.Error.UpdateError(1, fmt.Sprintf("fail: hackason.Query @postGetUserByUserId, %v\n", err))
+
+			if err_ := rows.Close(); err_ != nil {
+				log.Printf("fail: rows.Close @postGetUserByUserId, %v\n", err_)
+				postInfo.Error.UpdateError(1, fmt.Sprintf("fail: rows.Close @postGetUserByUserId, %v\n", err))
+				return err
+			}
+			return err
+		}
+		postInfo.User = u
+	}
+	return nil
 }
 
 func postGetReply(postId string, postInfo *makeupmodel.PostInfo) error {
