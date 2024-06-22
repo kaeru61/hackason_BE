@@ -198,7 +198,7 @@ func UserUpdate(u mainmodel.User) mainmodel.Error {
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: hackason.Begin, %v @user_update_dao\n", err))
 	}
 
-	rows, err := tx.Prepare("update user set (name, bio, age) where id=?")
+	rows, err := tx.Prepare("update user set (name, bio, age) where id=? values(?,?,?)")
 	if err != nil {
 		tx.Rollback()
 		return mainmodel.MakeError(1, fmt.Sprintf("fail: tx.Prepare, %v @user_update_dao\n", err))
